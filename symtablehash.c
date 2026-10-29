@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
-static size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 65521};
+static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 65521};
 
 /* Creates struct Node with string key, void pointer to value, and
 Node pointer to next*/
@@ -56,6 +56,7 @@ SymTable_T SymTable_new (void) {
         free(st);
         return NULL;
     }
+
     for (i = 0; i < st->bucketCount; i++) {
         st->buckets[i] = NULL;
     }
@@ -129,18 +130,18 @@ int SymTable_put (SymTable_T oSymTable,
     size_t hash;
     struct Node *temp;
     struct Node *newNode;
+    static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
     newBucketCount = oSymTable->bucketCount;
-
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
     }
 
-    for (j = 0; j < newBucketCount - 1; j++) {
-        if (oSymTable->bucketCount == auBucketCounts[j]) {
+    for (j = 0; j + 1 < numBucketCounts; j++) {
+        if (oSymTable->bucketCount + 1 > auBucketCounts[j]) {
             newBucketCount = auBucketCounts[j + 1];
             break;
         }
