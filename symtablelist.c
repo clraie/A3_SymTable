@@ -59,11 +59,13 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 /* Traverses the linked list with a temp pointer p and returns 1 (true)
 if the string compare finds pcKey. Returns 0 elsewise. */
 int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
-    struct Node *p = oSymTable->first;
+    struct Node *p;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
+    p = oSymTable->first;
+    
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             return 1;
@@ -116,11 +118,13 @@ former value. If not pcKey is not found, return NULL. */
 void *SymTable_replace (SymTable_T oSymTable,
         const char *pcKey, const void *pvValue) {
     
-    struct Node *p = oSymTable->first;
+    struct Node *p;
     void *old;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    p = oSymTable->first;
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
@@ -138,10 +142,12 @@ void *SymTable_replace (SymTable_T oSymTable,
 a void pointer to the value at pcKey if found. If not found, returns NULL.*/
 void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
     
-    struct Node *p = oSymTable->first;
+    struct Node *p;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    p = oSymTable->first;
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
@@ -156,12 +162,14 @@ void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
 /* Traverses the linked list with a temp pointer p and frees the key at pcKey if found.
 Decrements the number of bindings and relinks the list. Returns NULL if pcKey is not found.*/
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
-    struct Node *p = oSymTable->first;
+    struct Node *p;
     struct Node *previous = NULL;
     void *value;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    p = oSymTable->first;
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
@@ -191,10 +199,12 @@ void SymTable_map(SymTable_T oSymTable,
         void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
         const void *pvExtra) {
     
-    struct Node *p = oSymTable->first;
+    struct Node *p;
 
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
+
+    p = oSymTable->first;
 
     while (p != NULL) {
         (*pfApply)(p->key, (void *)p->value, (void *)pvExtra);

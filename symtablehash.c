@@ -93,11 +93,15 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 to check if key pcKey is in the symbol table. Returns 1 if found and 0 otherwise.*/
 int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
   
-    size_t hash = SymTable_hash(pcKey, oSymTable->bucketCount);
-    struct Node *p = oSymTable->buckets[hash];
+    size_t hash; 
+    struct Node *p; 
    
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    hash = oSymTable->buckets[hash];
+
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             return 1;
@@ -118,7 +122,7 @@ int SymTable_put (SymTable_T oSymTable,
     
     struct Node *p;
     char *pcKeyCpy;
-    size_t newBucketCount = oSymTable->bucketCount;
+    size_t newBucketCount;
     struct Node **newBuckets;
     size_t i;
     size_t j;
@@ -128,6 +132,8 @@ int SymTable_put (SymTable_T oSymTable,
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    newBucketCount = oSymTable->bucketCount;
 
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
@@ -140,13 +146,8 @@ int SymTable_put (SymTable_T oSymTable,
         }
     }
 
-    p = malloc(sizeof(*p));
-    if (p == NULL)
-        return 0;
-
     pcKeyCpy = malloc(strlen(pcKey) + 1);
     if (pcKeyCpy == NULL) {
-        free(p);
         return 0;
     }
     strcpy(pcKeyCpy, pcKey);
@@ -155,7 +156,6 @@ int SymTable_put (SymTable_T oSymTable,
         newBuckets = calloc(newBucketCount, sizeof(*newBuckets));
         if (newBuckets == NULL) {
             free(pcKeyCpy);
-            free(p);
             return 0;
         }
 
@@ -202,10 +202,12 @@ void *SymTable_replace (SymTable_T oSymTable,
     
     struct Node *p;
     void *old;
-    int hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    size_t hash;
     
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    hash =  SymTable_hash(pcKey, oSymTable->bucketCount);
 
     p = oSymTable->buckets[hash];
        
@@ -227,10 +229,12 @@ and returns the value at pcKey if found and NULL if not.*/
 void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
     
     struct Node *p;
-    int hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    size_t hash;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
     p = oSymTable->buckets[hash];
 
@@ -252,12 +256,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Node *p;
     struct Node *previous = NULL;
     void *value;
-    size_t hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    size_t hash;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-
+    hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    
     p = oSymTable->buckets[hash];
 
     while (p != NULL) {
