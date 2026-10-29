@@ -2,16 +2,17 @@
 #include <assert.h>
 #include <string.h>
 
-struct Node {
+typedef struct Node {
     const char *key;
     const void *value;
     struct Node *next;
-};
+} Node;
 
-struct SymTable_T {
+
+typedef struct SymTable_T {
     size_t length;
     struct Node *first;
-};
+} *SymTable_T;
 
 SymTable_T SymTable_new (void) {
     
@@ -148,7 +149,7 @@ void SymTable_map(SymTable_T oSymTable,
         void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
         const void *pvExtra) {
     
-    struct node *p = oSymTable->first;
+    struct Node *p = oSymTable->first;
 
     while (p != NULL) {
         (*pfApply)(p->key, p->value, pvExtra);
