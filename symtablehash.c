@@ -1,23 +1,31 @@
+/* Hash table implementation of symbol table data type.*/
 #include "symtable.h"
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 
+/* set of possible primes for total bucket count */
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 65521};
 
 /* Creates struct Node with string key, void pointer to value, and
 Node pointer to next*/
 struct Node {
+    /* string for key */
     const char *key;
+    /* void pointer to value*/
     void *value;
+    /* Node pointer to next Node */
     struct Node *next;
 };
 
 /* Creates SymTable_T struct, has length (number of bindings), bucketCount
 (number of buckets), and points to array of linked lists*/
 struct SymTable_T {
+    /* number of bindings */
     size_t length;
+    /* number of buckets */
     size_t bucketCount;
+    /* array of linked list of buckets */
     struct Node **buckets;
 };
 
@@ -135,11 +143,13 @@ int SymTable_put (SymTable_T oSymTable,
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
+    /* check if pcKey is in oSymTable */
     newBucketCount = oSymTable->bucketCount;
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
     }
 
+    /* check if expansion is necessary */
     for (j = 0; j + 1 < numBucketCounts; j++) {
         if (oSymTable->bucketCount + 1 > auBucketCounts[j]) {
             newBucketCount = auBucketCounts[j + 1];
@@ -147,12 +157,14 @@ int SymTable_put (SymTable_T oSymTable,
         }
     }
 
+    /* allocate memory for defensive copy of key*/
     pcKeyCpy = malloc(strlen(pcKey) + 1);
     if (pcKeyCpy == NULL) {
         return 0;
     }
     strcpy(pcKeyCpy, pcKey);
 
+    /* expand hash table*/
     if (newBucketCount != oSymTable->bucketCount) {
         newBuckets = calloc(newBucketCount, sizeof(*newBuckets));
         if (newBuckets == NULL) {
@@ -178,6 +190,7 @@ int SymTable_put (SymTable_T oSymTable,
         oSymTable->bucketCount = newBucketCount;
     }
 
+    /* put defensive copy of key in hash table*/
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     
 
@@ -288,7 +301,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
-/* Loops through symbol table and applies pfApply to each Node.*/
+/* Loops through symbol table and applies pfApply to each Node. 
+pvExtra is passed as an extra parameter*/
 void SymTable_map(SymTable_T oSymTable,
         void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
         const void *pvExtra) {

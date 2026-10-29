@@ -3,7 +3,9 @@
 
 #include <stddef.h>
 
+   /* Node struct for linked list*/
   typedef struct Node *Node;
+  /* SymTable_T struct for symbol table*/
   typedef struct SymTable_T *SymTable_T;
 
   /* Returns new SymTable_T object without bindings or NULL if 

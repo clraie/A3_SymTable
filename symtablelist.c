@@ -1,3 +1,5 @@
+/* Linked list implementation of symbol table data type.*/
+
 #include "symtable.h"
 #include <stdlib.h>
 #include <assert.h>
@@ -6,15 +8,20 @@
 /* Creates struct Node with string key, void pointer to value, and
 Node pointer to next*/
 struct Node {
+    /* string key */
     const char *key;
+    /* void pointer for value*/
     void *value;
+    /* Node pointer for next Node */
     struct Node *next;
 };
 
 /* Creates SymTable_T struct, has length (number of bindings) and a Node
 pointer to the first Node in the list. */
 struct SymTable_T {
+    /* number of bindings*/
     size_t length;
+    /* Node pointer to the first Node in the linked list */
     struct Node *first;
 };
 
@@ -65,7 +72,7 @@ int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
 
     p = oSymTable->first;
-    
+
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             return 1;
@@ -194,7 +201,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 }
 
 /*Traverses the linked list with temp pointer p and applies the function pfApply
-to each Node. */
+to each Node. Takes pvExtra as an extra parameter. */
 void SymTable_map(SymTable_T oSymTable,
         void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
         const void *pvExtra) {
