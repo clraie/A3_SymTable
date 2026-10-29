@@ -290,36 +290,6 @@ void *SymTable_replace (SymTable_T oSymTable,
     return NULL;
 }
 
-
-/* Loops through the linked list at correct hash with a temp pointer and 
-returns then replaces the old value of pcKey. Returns NULL if pcKey is not found. */
-void *SymTable_replace (SymTable_T oSymTable,
-        const char *pcKey, const void *pvValue) {
-    
-    struct Node *p;
-    void *old;
-    size_t hash;
-    
-    assert(oSymTable != NULL);
-    assert(pcKey != NULL);
-
-    hash =  SymTable_hash(pcKey, oSymTable->bucketCount);
-
-    p = oSymTable->buckets[hash];
-       
-    while (p != NULL) {
-        if (strcmp(p->key, pcKey) == 0) {
-            old = p->value;
-            p->value = (void *)pvValue;
-            return old;
-        } else {
-            p = p->next;
-        }
-    }
-    
-    return NULL;
-}
-
 /* Loops through the linked list at the correct hash with a temp pointer p 
 and returns the value at pcKey if found and NULL if not.*/
 void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
