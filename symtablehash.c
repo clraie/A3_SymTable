@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <string.h>
 
+static size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 65521};
+
 struct Node {
     const char *key;
     void *value;
@@ -42,7 +44,7 @@ SymTable_T SymTable_new (void) {
     }
 
     st->length = 0;
-    st->bucketCount = 509;
+    st->bucketCount = auBucketCounts[0];
     st->buckets = malloc(st->bucketCount * sizeof(struct Node *));
     if (st->buckets == NULL) {
         free(st);
@@ -97,6 +99,7 @@ int SymTable_put (SymTable_T oSymTable,
     size_t newBucketCount = oSymTable->bucketCount;
     struct Node **newBuckets;
     size_t i;
+    size_t j;
     size_t hash;
     struct Node *temp;
     struct Node *newNode;
@@ -106,26 +109,11 @@ int SymTable_put (SymTable_T oSymTable,
         return 0;
     }
 
-
-    switch(uLength) {
-        case 509:
-            newBucketCount = 1021;
+    for (j = 0; j < newBucketCount - 1; j++) {
+        if (oSymTable->bucketCount == auBucketCounts[j]) {
+            newBucketCount = auBucketCounts[j + 1];
             break;
-        case 1021:
-            newBucketCount = 2039;
-            break;
-        case 2039:
-            newBucketCount = 4093;
-            break;
-        case 4093:
-            newBucketCount = 8191;
-            break;
-        case 8191:
-            newBucketCount = 16381;
-            break;
-        case 16381:
-            newBucketCount = 65521;
-            break;
+        }
     }
 
     p = malloc(sizeof(*p));
