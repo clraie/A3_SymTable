@@ -62,13 +62,13 @@ int SymTable_put (SymTable_T oSymTable,
     struct Node *p;
     char *pcKeyCpy;
 
-    if (SymTable_contains(oSymTable, pcKey))
+    if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
-
+    }
     p = malloc(sizeof(*p));
-    if (p == NULL)
+    if (p == NULL) {
         return 0;
-
+    }
     pcKeyCpy = malloc(strlen(pcKey) + 1);
     if (pcKeyCpy == NULL) {
         free(p);
@@ -157,5 +157,6 @@ void SymTable_map(SymTable_T oSymTable,
         p = p->next;    
     }
 }
+
 
 
