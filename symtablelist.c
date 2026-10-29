@@ -95,8 +95,8 @@ void *SymTable_replace (SymTable_T oSymTable,
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             old = p->value;
-            p->value = pvValue;
-            return (void *)old;
+            p->value = (void *)pvValue;
+            return old;
         } else {
             p = p->next;
         }
