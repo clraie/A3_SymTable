@@ -100,7 +100,7 @@ int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
 
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
-    hash = oSymTable->buckets[hash];
+    p = oSymTable->buckets[hash];
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
@@ -262,7 +262,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
 
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
-    
+
     p = oSymTable->buckets[hash];
 
     while (p != NULL) {
