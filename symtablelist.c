@@ -85,7 +85,6 @@ int SymTable_put (SymTable_T oSymTable,
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    assert(pvValue != NULL);
 
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
@@ -122,7 +121,6 @@ void *SymTable_replace (SymTable_T oSymTable,
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    assert(pvValue != NULL);
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
