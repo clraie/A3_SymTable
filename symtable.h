@@ -1,5 +1,10 @@
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
+
+#include <stddef.h>
+
+  typedef struct SymTable *SymTable_T;
+
   SymTable_T SymTable_new(void);
 
   void SymTable_free(SymTable_T oSymTable);
