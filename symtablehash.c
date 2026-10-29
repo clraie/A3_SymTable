@@ -165,12 +165,12 @@ int SymTable_put (SymTable_T oSymTable,
         oSymTable->bucketCount = newBucketCount;
     }
 
-
+    hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    newNode = oSymTable->buckets[hash];
     newNode->key = pcKeyCpy;
     newNode->value = (void *)pvValue;
-    hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     newNode->next = oSymTable->buckets[hash];
-    oSymTable->buckets[hash] = p;
+    oSymTable->buckets[hash] = newNode;
     oSymTable->length++;
 
     return 1;
