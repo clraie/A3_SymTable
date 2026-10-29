@@ -58,6 +58,9 @@ SymTable_T SymTable_new (void) {
 void SymTable_free(SymTable_T oSymTable) {
     struct Node *temp;
     size_t i;
+
+    assert(oSymTable != NULL);
+
     for (i = 0; i < oSymTable->bucketCount; i++) {
         while (oSymTable->buckets[i] != NULL) {
             temp = oSymTable->buckets[i]->next;
@@ -71,13 +74,17 @@ void SymTable_free(SymTable_T oSymTable) {
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
+    assert(oSymTable != NULL);
     return oSymTable->length;
 }
 
 int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
+  
     size_t hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     struct Node *p = oSymTable->buckets[hash];
-
+   
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             return 1;
@@ -101,7 +108,10 @@ int SymTable_put (SymTable_T oSymTable,
     struct Node *temp;
     struct Node *newNode;
 
-    
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    assert(pvValue != NULL);
+
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
     }
@@ -190,6 +200,10 @@ void *SymTable_replace (SymTable_T oSymTable,
     void *old;
     int hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    assert(pvValue != NULL);
+
     p = oSymTable->buckets[hash];
        
     while (p != NULL) {
@@ -210,6 +224,9 @@ void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
     struct Node *p;
     int hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+
     p = oSymTable->buckets[hash];
 
     while (p != NULL) {
@@ -226,6 +243,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Node *p;
     struct Node *previous = NULL;
     void *value;
+
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
 
     int hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
@@ -259,6 +279,9 @@ void SymTable_map(SymTable_T oSymTable,
     
     struct Node *p;
     size_t i;
+
+    assert(oSymTable != NULL);
+    assert(pfApply != NULL);
 
     for (i = 0; i < oSymTable->bucketCount; i++) 
     {   

@@ -31,6 +31,9 @@ SymTable_T SymTable_new (void) {
 
 void SymTable_free(SymTable_T oSymTable) {
     struct Node *temp;
+
+    assert(oSymTable != NULL);
+
     while(oSymTable->first != NULL) {
         temp = oSymTable->first->next;
         free((char *)oSymTable->first->key);
@@ -41,11 +44,16 @@ void SymTable_free(SymTable_T oSymTable) {
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
+    assert(oSymTable != NULL);
     return oSymTable->length;
 }
 
 int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
     struct Node *p = oSymTable->first;
+
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             return 1;
@@ -61,6 +69,10 @@ int SymTable_put (SymTable_T oSymTable,
     
     struct Node *p;
     char *pcKeyCpy;
+
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    assert(pvValue != NULL);
 
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
@@ -92,6 +104,10 @@ void *SymTable_replace (SymTable_T oSymTable,
     struct Node *p = oSymTable->first;
     void *old;
 
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    assert(pvValue != NULL);
+
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             old = p->value;
@@ -109,6 +125,9 @@ void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
     
     struct Node *p = oSymTable->first;
 
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             return (void *)p->value;
@@ -123,6 +142,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Node *p = oSymTable->first;
     struct Node *previous = NULL;
     void *value;
+
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
@@ -151,6 +173,9 @@ void SymTable_map(SymTable_T oSymTable,
         const void *pvExtra) {
     
     struct Node *p = oSymTable->first;
+
+    assert(oSymTable != NULL);
+    assert(pfApply != NULL);
 
     while (p != NULL) {
         (*pfApply)(p->key, (void *)p->value, (void *)pvExtra);
