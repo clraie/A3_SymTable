@@ -1,4 +1,5 @@
 #include "symtable.h"
+#include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 
@@ -9,10 +10,10 @@ typedef struct Node {
 } Node;
 
 
-typedef struct SymTable_T {
+struct SymTable_T {
     size_t length;
     struct Node *first;
-} *SymTable_T;
+};
 
 SymTable_T SymTable_new (void) {
     

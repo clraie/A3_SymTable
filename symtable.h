@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-  typedef struct SymTable *SymTable_T;
+  typedef struct SymTable_T *SymTable_T;
 
   SymTable_T SymTable_new(void);
 
