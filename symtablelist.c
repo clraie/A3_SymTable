@@ -77,7 +77,7 @@ int SymTable_put (SymTable_T oSymTable,
 
     strcpy(pcKeyCpy, pcKey);
     p->key = pcKeyCpy;
-    p->value = pvValue;
+    p->value = (void *)pvValue;
     p->next = oSymTable->first;
     oSymTable->first = p;
     oSymTable->length++;
