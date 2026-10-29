@@ -3,12 +3,16 @@
 #include <assert.h>
 #include <string.h>
 
+/* Creates struct Node with string key, void pointer to value, and
+Node pointer to next*/
 struct Node {
     const char *key;
     void *value;
     struct Node *next;
 };
 
+/* Creates SymTable_T struct, has length (number of bindings), bucketCount
+(number of buckets), and points to array of linked lists*/
 struct SymTable_T {
     size_t length;
     size_t bucketCount;
@@ -32,6 +36,8 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
+/* Returns new SymTable_T without bindings. Sets number of bindings to zero
+and bucketCount to 509. */
 SymTable_T SymTable_new (void) {
     
     SymTable_T st = malloc(sizeof(*st));
@@ -55,6 +61,8 @@ SymTable_T SymTable_new (void) {
     return st;
 }
 
+/* Iterates through each linked list of each bucket and frees the key and the 
+Node pointer. Then frees the array and symbol table. */
 void SymTable_free(SymTable_T oSymTable) {
     struct Node *temp;
     size_t i;
@@ -73,11 +81,14 @@ void SymTable_free(SymTable_T oSymTable) {
     free(oSymTable);
 }
 
+/* Returns number of bindings in symbol table. */
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     return oSymTable->length;
 }
 
+/* Iterates through the linked list at the hash and compares keys
+to check if key pcKey is in the symbol table. Returns 1 if found and 0 otherwise.*/
 int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
   
     size_t hash = SymTable_hash(pcKey, oSymTable->bucketCount);
@@ -95,6 +106,11 @@ int SymTable_contains (SymTable_T oSymTable, const char *pcKey) {
     return 0;
 }
 
+/* Checks if symbol table contains the key pcKey and returns 0 if found. 
+Checks if adding another binding would exceed the current bucket count and 
+expands the hash table if necessary. Expands in sequence of prime integers and
+does not expand past 65521 buckets. Creates a defensive copy of the new Node
+and puts it in the symbol table. */
 int SymTable_put (SymTable_T oSymTable,
         const char *pcKey, const void *pvValue) {
     
@@ -193,6 +209,8 @@ int SymTable_put (SymTable_T oSymTable,
 
 }
 
+/* Loops through the linked list at correct hash with a temp pointer and 
+returns then replaces the old value of pcKey. Returns NULL if pcKey is not found. */
 void *SymTable_replace (SymTable_T oSymTable,
         const char *pcKey, const void *pvValue) {
     
@@ -219,6 +237,8 @@ void *SymTable_replace (SymTable_T oSymTable,
     return NULL;
 }
 
+/* Loops through the linked list at the correct hash with a temp pointer p 
+and returns the value at pcKey if found and NULL if not.*/
 void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
     
     struct Node *p;
@@ -239,6 +259,10 @@ void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
+/* Loops through the linked list at the correct hash with temp pointer p
+and frees the key and temp pointer if pcKey is found. Returns the value at
+pcKey. Relinks the linked list to keep continuous chain. Returns NULL
+if pcKey is not found. */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Node *p;
     struct Node *previous = NULL;
@@ -273,6 +297,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
+/* Loops through symbol table and applies pfApply to each Node.*/
 void SymTable_map(SymTable_T oSymTable,
         void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
         const void *pvExtra) {
