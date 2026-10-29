@@ -165,7 +165,6 @@ int SymTable_put (SymTable_T oSymTable,
     /* allocate memory for defensive copy of key*/
     newNode = malloc(sizeof(*newNode));
     if (newNode == NULL) {
-        free(pcKeyCpy);
         return 0;
     }
 
@@ -179,24 +178,22 @@ int SymTable_put (SymTable_T oSymTable,
     /* expand hash table*/
     if (newBucketCount != oSymTable->bucketCount) {
         newBuckets = calloc(newBucketCount, sizeof(*newBuckets));
-        if (newBuckets == NULL) {
-            free(pcKeyCpy);
-            return 0;
+        if (newBuckets != NULL) {
+            for (i = 0; i < oSymTable->bucketCount; i++) {
+                p = oSymTable->buckets[i];
+
+                while (p != NULL) {
+                    temp = p->next;
+
+                    hash = SymTable_hash(p->key, newBucketCount);
+                    p->next = newBuckets[hash];
+                    newBuckets[hash] = p;
+
+                    p = temp;
+                }       
+            }
         }
 
-        for (i = 0; i < oSymTable->bucketCount; i++) {
-            p = oSymTable->buckets[i];
-
-             while (p != NULL) {
-                temp = p->next;
-
-                hash = SymTable_hash(p->key, newBucketCount);
-                p->next = newBuckets[hash];
-                newBuckets[hash] = p;
-
-                p = temp;
-            }       
-        }
         free(oSymTable->buckets);
         oSymTable->buckets = newBuckets;
         oSymTable->bucketCount = newBucketCount;
