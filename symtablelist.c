@@ -90,7 +90,7 @@ void *SymTable_replace (SymTable_T oSymTable,
         const char *pcKey, const void *pvValue) {
     
     struct Node *p = oSymTable->first;
-    void *old;
+    const void *old;
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
@@ -111,7 +111,7 @@ void *SymTable_get (SymTable_T oSymTable, const char *pcKey) {
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
-            return p->value;
+            return (void *)p->value;
         } else {
             p = p->next;
         }
@@ -126,7 +126,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
-            value = p->value;
+            value = (void *)p->value;
             if (previous == NULL) {
                 oSymTable->first = oSymTable->first->next;
             }
@@ -153,7 +153,7 @@ void SymTable_map(SymTable_T oSymTable,
     struct Node *p = oSymTable->first;
 
     while (p != NULL) {
-        (*pfApply)(p->key, p->value, pvExtra);
+        (*pfApply)(p->key, (void *)p->value, (void *)pvExtra);
         p = p->next;    
     }
 }
