@@ -118,7 +118,6 @@ int SymTable_put (SymTable_T oSymTable,
     
     struct Node *p;
     char *pcKeyCpy;
-    size_t uLength = SymTable_getLength(oSymTable);
     size_t newBucketCount = oSymTable->bucketCount;
     struct Node **newBuckets;
     size_t i;
@@ -259,7 +258,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    int hash = SymTable_hash(pcKey, oSymTable->bucketCount);
+    size_t hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
     p = oSymTable->buckets[hash];
 
