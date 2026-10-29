@@ -877,7 +877,7 @@ static void testLargeTable(int iBindingCount)
       sprintf(acKey, "%d", iLarge);
       pcValue = (char*)SymTable_remove(oSymTable, acKey);
       ASSURE(pcValue != NULL);
-      ASSURE((pcValuef != NULL) && (strcmp(pcValue, acKey) == 0));
+      ASSURE((pcValue != NULL) && (strcmp(pcValue, acKey) == 0));
       free(pcValue);
       uLength--;
       uLength2 = SymTable_getLength(oSymTable);
