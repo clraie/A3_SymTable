@@ -15,11 +15,14 @@ clean:
 testsymtablelist: testsymtablelist.o symtablelist.o
 	$(CC) $(CFLAGS) testsymtablelist.o symtablelist.o -o testsymtablelist
 
-testsymtablehash: testsymtablehash.o symtablehash.o
-	$(CC) $(CFLAGS) testsymtablehash.o symtablehash.o -o testsymtablehash
+testsymtablelist: testsymtable.o symtablelist.o
+	$(CC) $(CFLAGS) -o testsymtablelist testsymtable.o symtablelist.o
 
-testsymtablelist.o: testsymtablelist.c symtable.h
-	$(CC) $(CFLAGS) -c testsymtablelist.c
+testsymtablehash: testsymtable.o symtablehash.o
+	$(CC) $(CFLAGS) -o testsymtablehash testsymtable.o symtablehash.o
+
+testsymtable.o: testsymtable.c symtable.h
+	$(CC) $(CFLAGS) -c testsymtable.c
 
 symtablelist.o: symtablelist.c symtable.h
 	$(CC) $(CFLAGS) -c symtablelist.c
