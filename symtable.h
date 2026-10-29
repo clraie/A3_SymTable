@@ -1,3 +1,4 @@
+/* Interface file for symbol table data type*/
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
@@ -44,7 +45,8 @@
   change oSymTable and returns NULL. */
   void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
 
-  /* Apply the function pfApply to all bindings in oSymTable. */
+  /* Apply the function pfApply to all bindings in oSymTable. Takes pvExtra as an extra
+  parameter */
   void SymTable_map(SymTable_T oSymTable,
      void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
      const void *pvExtra);
