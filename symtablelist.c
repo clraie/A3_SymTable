@@ -90,13 +90,13 @@ void *SymTable_replace (SymTable_T oSymTable,
         const char *pcKey, const void *pvValue) {
     
     struct Node *p = oSymTable->first;
-    const void *old;
+    void *old;
 
     while (p != NULL) {
         if (strcmp(p->key, pcKey) == 0) {
             old = p->value;
             p->value = pvValue;
-            return old;
+            return (void *)old;
         } else {
             p = p->next;
         }
