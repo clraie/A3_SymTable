@@ -107,26 +107,26 @@ int SymTable_put (SymTable_T oSymTable,
     }
 
 
-    switch(uLength) {
-        case 509:
-            newBucketCount = 1021;
-            break;
-        case 1021:
-            newBucketCount = 2039;
-            break;
-        case 2039:
-            newBucketCount = 4093;
-            break;
-        case 4093:
-            newBucketCount = 8191;
-            break;
-        case 8191:
-            newBucketCount = 16381;
-            break;
-        case 16381:
-            newBucketCount = 65521;
-            break;
-    }
+    // switch(uLength) {
+    //     case 509:
+    //         newBucketCount = 1021;
+    //         break;
+    //     case 1021:
+    //         newBucketCount = 2039;
+    //         break;
+    //     case 2039:
+    //         newBucketCount = 4093;
+    //         break;
+    //     case 4093:
+    //         newBucketCount = 8191;
+    //         break;
+    //     case 8191:
+    //         newBucketCount = 16381;
+    //         break;
+    //     case 16381:
+    //         newBucketCount = 65521;
+    //         break;
+    // }
 
     p = malloc(sizeof(*p));
     if (p == NULL)
@@ -139,31 +139,31 @@ int SymTable_put (SymTable_T oSymTable,
     }
     strcpy(pcKeyCpy, pcKey);
 
-    if (newBucketCount != oSymTable->bucketCount) {
-        newBuckets = calloc(newBucketCount, sizeof(*newBuckets));
-        if (newBuckets == NULL) {
-            free(pcKeyCpy);
-            free(p);
-            return 0;
-        }
+    // if (newBucketCount != oSymTable->bucketCount) {
+    //     newBuckets = calloc(newBucketCount, sizeof(*newBuckets));
+    //     if (newBuckets == NULL) {
+    //         free(pcKeyCpy);
+    //         free(p);
+    //         return 0;
+    //     }
 
-        for (i = 0; i < oSymTable->bucketCount; i++) {
-            p = oSymTable->buckets[i];
+    //     for (i = 0; i < oSymTable->bucketCount; i++) {
+    //         p = oSymTable->buckets[i];
 
-             while (p != NULL) {
-                temp = p->next;
+    //          while (p != NULL) {
+    //             temp = p->next;
 
-                hash = SymTable_hash(p->key, newBucketCount);
-                p->next = newBuckets[hash];
-                newBuckets[hash] = p;
+    //             hash = SymTable_hash(p->key, newBucketCount);
+    //             p->next = newBuckets[hash];
+    //             newBuckets[hash] = p;
 
-                p = temp;
-            }       
-        }
-        free(oSymTable->buckets);
-        oSymTable->buckets = newBuckets;
-        oSymTable->bucketCount = newBucketCount;
-    }
+    //             p = temp;
+    //         }       
+    //     }
+    //     free(oSymTable->buckets);
+    //     oSymTable->buckets = newBuckets;
+    //     oSymTable->bucketCount = newBucketCount;
+    // }
 
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     newNode = oSymTable->buckets[hash];
