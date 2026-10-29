@@ -5,7 +5,7 @@
 #include <string.h>
 
 /* set of possible primes for total bucket count */
-static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 65521};
+static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
 
 /* Creates struct Node with string key, void pointer to value, and
 Node pointer to next*/
@@ -129,37 +129,49 @@ and puts it in the symbol table. */
 int SymTable_put (SymTable_T oSymTable,
         const char *pcKey, const void *pvValue) {
     
-    struct Node *p;
-    char *pcKeyCpy;
-    size_t newBucketCount;
     struct Node **newBuckets;
+    struct Node *p;
+    struct Node *temp;
+    struct Node *newNode;
+    char *pcKeyCpy;
+    static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
+    size_t newBucketCount;
     size_t i;
     size_t j;
     size_t hash;
-    struct Node *temp;
-    struct Node *newNode;
-    static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
-
+    size_t uLength;
+    
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    /* check if pcKey is in oSymTable */
+    uLength = oSymTable->length;
     newBucketCount = oSymTable->bucketCount;
+
+    /* check if pcKey is in oSymTable */
     if (SymTable_contains(oSymTable, pcKey)) {
         return 0;
     }
 
     /* check if expansion is necessary */
-    for (j = 0; j + 1 < numBucketCounts; j++) {
-        if (oSymTable->bucketCount + 1 > auBucketCounts[j]) {
-            newBucketCount = auBucketCounts[j + 1];
-            break;
+    if (uLength + 1 > oSymTable->bucketCount) {
+        for (j = 0; j + 1 < numBucketCounts; j++) {
+            if (oSymTable->bucketCount == auBucketCounts[j]) {
+                newBucketCount = auBucketCounts[j + 1];
+                break;
+            }
         }
     }
 
     /* allocate memory for defensive copy of key*/
+    newNode = malloc(sizeof(*newNode));
+    if (newNode == NULL) {
+        free(pcKeyCpy);
+        return 0;
+    }
+
     pcKeyCpy = malloc(strlen(pcKey) + 1);
     if (pcKeyCpy == NULL) {
+        free(newNode);
         return 0;
     }
     strcpy(pcKeyCpy, pcKey);
@@ -194,11 +206,6 @@ int SymTable_put (SymTable_T oSymTable,
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     
 
-    newNode = malloc(sizeof(*newNode));
-    if (newNode == NULL) {
-        free(pcKeyCpy);
-        return 0;
-    }
     newNode->key = pcKeyCpy;
     newNode->value = (void *)pvValue;
     newNode->next = oSymTable->buckets[hash];
