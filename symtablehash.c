@@ -107,7 +107,7 @@ int SymTable_put (SymTable_T oSymTable,
     }
 
 
-    /*switch(uLength) {
+    switch(uLength) {
         case 509:
             newBucketCount = 1021;
             break;
@@ -126,7 +126,7 @@ int SymTable_put (SymTable_T oSymTable,
         case 16381:
             newBucketCount = 65521;
             break;
-    }*/
+    }
 
     p = malloc(sizeof(*p));
     if (p == NULL)
@@ -139,7 +139,7 @@ int SymTable_put (SymTable_T oSymTable,
     }
     strcpy(pcKeyCpy, pcKey);
 
-    /*if (newBucketCount != oSymTable->bucketCount) {
+    if (newBucketCount != oSymTable->bucketCount) {
         newBuckets = calloc(newBucketCount, sizeof(*newBuckets));
         if (newBuckets == NULL) {
             free(pcKeyCpy);
@@ -163,10 +163,16 @@ int SymTable_put (SymTable_T oSymTable,
         free(oSymTable->buckets);
         oSymTable->buckets = newBuckets;
         oSymTable->bucketCount = newBucketCount;
-    }*/
+    }
 
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
-    newNode = oSymTable->buckets[hash];
+    
+
+    newNode = malloc(sizeof(*newNode));
+    if (newNode == NULL) {
+        free(pcKeyCpy);
+        return 0;
+    }
     newNode->key = pcKeyCpy;
     newNode->value = (void *)pvValue;
     newNode->next = oSymTable->buckets[hash];
