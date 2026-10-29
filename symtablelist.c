@@ -1,4 +1,4 @@
-#include <symtable.h>
+#include "symtable.h"
 #include <assert.h>
 #include <string.h>
 
