@@ -3,11 +3,11 @@
 #include <assert.h>
 #include <string.h>
 
-typedef struct Node {
+struct Node {
     const char *key;
     void *value;
     struct Node *next;
-} Node;
+};
 
 
 struct SymTable_T {
